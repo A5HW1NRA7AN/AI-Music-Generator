@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎼 Advanced AI MIDI Player</title>
+
+  <!-- Combined CDN with Tone.js, Magenta.js, focus-visible, html-midi-player -->
+  <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0f0f0f;
+      color: #f0f0f0;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #4FC3F7;
+    }
+
+    .upload-box {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+      max-width: 600px;
+      margin: auto;
+    }
+
+    input[type="file"], select {
+      padding: 10px;
+      border: 1px solid #555;
+      border-radius: 8px;
+      background-color: #222;
+      color: white;
+      width: 80%;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      background: linear-gradient(to right, #2196f3, #21cbf3);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    midi-player, midi-visualizer {
+      width: 100%;
+      max-width: 800px;
+      margin: 2rem auto;
+      display: block;
+    }
+
+    .visualizer-controls {
+      margin-top: 1.5rem;
+    }
+
+    footer {
+      margin-top: 4rem;
+      font-size: 0.85rem;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎹 AI Music Generator & MIDI Player</h1>
+
+  <div class="upload-box">
+    <form method="POST" enctype="multipart/form-data">
+      <input type="file" name="file" accept=".mid,.midi" required><br>
+      <div class="visualizer-controls">
+        <label for="vizType">Visualizer Type:</label>
+        <select id="vizType" onchange="changeVisualizerType()">
+          <option value="piano-roll" selected>Piano Roll</option>
+          <option value="staff">Staff</option>
+          <option value="waterfall">Waterfall</option>
+        </select>
+      </div>
+      <button type="submit">Upload & Play</button>
+    </form>
+  </div>
+
+  {% if midi_file %}
+    <p>Now Playing: <code>{{ midi_file }}</code></p>
+
+    <midi-player
+      id="midiPlayer"
+      src="{{ midi_file }}"
+      sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus"
+      visualizer="#viz"
+      autoplay
+      loop
+      controls
+      style="background:#1f1f1f; border-radius:12px;">
+    </midi-player>
+
+    <midi-visualizer
+      id="viz"
+      type="piano-roll"
+      style="background:#111; border-radius:12px;">
+    </midi-visualizer>
+  {% endif %}
+
+  <footer>
+    Built with ❤️ using Flask, Magenta.js & HTML MIDI Player. | <a href="https://github.com/cifkao/html-midi-player" target="_blank" style="color:#4FC3F7;">GitHub</a>
+  </footer>
+
+  <script>
+    function changeVisualizerType() {
+      const type = document.getElementById('vizType').value;
+      const visualizer = document.getElementById('viz');
+      visualizer.setAttribute('type', type);
+    }
+  </script>
+</body>
+</html>
